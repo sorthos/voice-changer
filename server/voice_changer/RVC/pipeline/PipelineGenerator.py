@@ -1,5 +1,6 @@
 import os
 import traceback
+import torch
 import faiss
 from Exceptions import PipelineCreateException
 from data.ModelSlot import RVCModelSlot
@@ -15,6 +16,13 @@ from voice_changer.utils.VoiceChangerParams import VoiceChangerParams
 def createPipeline(params: VoiceChangerParams, modelSlot: RVCModelSlot, gpu: int, f0Detector: str):
     dev = DeviceManager.get_instance().getDevice(gpu)
     half = DeviceManager.get_instance().halfPrecisionAvailable(gpu)
+
+    # IMPORTANT: MPS backend produces garbage audio for RVC models.
+    # Force CPU for the entire pipeline on Mac until MPS issues are resolved.
+    if dev.type == "mps":
+        print("[PipelineGenerator] MPS detected - forcing CPU for entire pipeline (known MPS compatibility issue)", flush=True)
+        dev = torch.device("cpu")
+        half = False
 
     # Inferencer 生成
     try:

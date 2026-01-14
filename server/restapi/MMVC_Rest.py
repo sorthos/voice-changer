@@ -80,7 +80,8 @@ class MMVC_Rest:
             except Exception as e:
                 print("Locating model_dir_static failed", e)
 
-            if sys.platform.startswith("darwin"):
+            if sys.platform.startswith("darwin") and hasattr(sys, "_MEIPASS"):
+                # Running from PyInstaller bundle on macOS
                 p1 = os.path.dirname(sys._MEIPASS)
                 p2 = os.path.dirname(p1)
                 p3 = os.path.dirname(p2)
@@ -92,6 +93,7 @@ class MMVC_Rest:
                     name="static",
                 )
             else:
+                # Running from source (all platforms) or non-bundled macOS
                 app_fastapi.mount(
                     f"/{voiceChangerParams.model_dir}",
                     StaticFiles(directory=voiceChangerParams.model_dir),

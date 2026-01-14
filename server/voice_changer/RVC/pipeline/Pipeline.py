@@ -3,7 +3,7 @@ from typing import Any
 import math
 import torch
 import torch.nn.functional as F
-from torch.cuda.amp import autocast
+from contextlib import nullcontext
 from Exceptions import (
     DeviceCannotSupportHalfPrecisionException,
     DeviceChangingException,
@@ -65,6 +65,17 @@ class Pipeline(object):
         self.sr = 16000
         self.window = 160
 
+    def _get_autocast_context(self):
+        """Get device-appropriate autocast context manager.
+
+        CUDA autocast (torch.cuda.amp.autocast) doesn't work on MPS devices.
+        Only use autocast for CUDA devices with half precision enabled.
+        """
+        if self.isHalf and self.device.type == "cuda":
+            from torch.cuda.amp import autocast
+            return autocast(enabled=True)
+        return nullcontext()
+
     def getPipelineInfo(self):
         inferencerInfo = self.inferencer.getInferencerInfo() if self.inferencer else {}
         embedderInfo = self.embedder.getEmbedderInfo()
@@ -100,7 +111,7 @@ class Pipeline(object):
         return pitch, pitchf
 
     def extractFeatures(self, feats, embOutputLayer, useFinalProj):
-        with autocast(enabled=self.isHalf):
+        with self._get_autocast_context():
             try:
                 feats = self.embedder.extractFeatures(feats, embOutputLayer, useFinalProj)
                 if torch.isnan(feats).all():
@@ -117,8 +128,8 @@ class Pipeline(object):
     def infer(self, feats, p_len, pitch, pitchf, sid, out_size):
         try:
             with torch.no_grad():
-                with autocast(enabled=self.isHalf):
-                    audio1 = self.inferencer.infer(feats,  p_len, pitch, pitchf, sid, out_size)                    
+                with self._get_autocast_context():
+                    audio1 = self.inferencer.infer(feats,  p_len, pitch, pitchf, sid, out_size)
                     audio1 = (audio1 * 32767.5).data.to(dtype=torch.int16)
             return audio1
         except RuntimeError as e:
@@ -229,7 +240,8 @@ class Pipeline(object):
             # pitchの推定が上手くいかない(pitchf=0)場合、検索前の特徴を混ぜる
             # pitchffの作り方の疑問はあるが、本家通りなので、このまま使うことにする。
             # https://github.com/w-okada/voice-changer/pull/276#issuecomment-1571336929
-            if protect < 0.5 and search_index:
+            # Also check pitchf is not None for "nono" (no f0) models
+            if protect < 0.5 and search_index and pitchf is not None:
                 pitchff = pitchf.clone()
                 pitchff[pitchf > 0] = 1
                 pitchff[pitchf < 1] = protect
