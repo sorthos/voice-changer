@@ -19,10 +19,14 @@ VCClient是一款利用AI进行实时语音转换的软件。
 
 ## What's New!
 
+* v.2.2.2-beta
+  * 发布版本：std_win, std_mac, std_lin_aarch64
+  * 自 v.2.2.2-beta 起，各版本支持的模型因版本而异（见下文）。此外，不同版本发布的 edition 可能不同。
+  * 支持 Beatrice v2.0.0-rc0。
 * v.2.0.78-beta
-  * bug修复：避免RVC模型上传错误
-  * 现在可以与ver.1.x同时启动
-  * 增加了可选择的chunk size
+  * bug 修复：避免 RVC 模型上传错误
+  * 现在可以与 ver.1.x 同时启动
+  * 增加了可选择的 chunk size
 * v.2.0.77-beta (仅适用于 RTX 5090，实验性)
   * 相关模块支持 RTX 5090（由于开发者未拥有 RTX 5090，未经验证）
 * v.2.0.76-beta
@@ -37,6 +41,20 @@ VCClient是一款利用AI进行实时语音转换的软件。
   * 错误修复：
     * 修复了beatrice v2的音高和共振峰未反映的错误
     * 修复了使用Applio的embedder的模型无法生成ONNX的错误
+
+## 版本（Edition）
+
+自 v2.2.1 起，不同版本所支持的 AI 模型有所不同。
+
+| 版本 | 平台           | 支持的模型     |     |
+| ---- | -------------- | -------------- | --- |
+| std  | win            | Beatrice       |     |
+| std  | mac(m1)        | Beatrice       |     |
+| std  | linux(x86-64)  | Beatrice       |     |
+| std  | linux(aarch64) | Beatrice       |     |
+| cuda | win            | Beatrice, RVC  |     |
+| onnx | win            | Beatrice, RVC  |     |
+| onnx | mac(m1)        | Beatrice, RVC  |     |
 
 ## 下载和相关链接
 
@@ -146,3 +164,5 @@ Windows, Mac(M1), Linux, Google Colab
 ## 免责声明
 
 对于因使用或无法使用本软件而导致的任何直接、间接、衍生、结果性或特殊损害，本软件概不负责。
+
+```

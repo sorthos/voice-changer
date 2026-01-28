@@ -19,6 +19,10 @@ VCClient è un software che utilizza l'IA per la conversione vocale in tempo rea
 
 ## What's New!
 
+* v.2.2.2-beta
+  * Edizioni rilasciate: std_win, std_mac, std_lin_aarch64
+  * Dalla v.2.2.2-beta, i modelli supportati differiscono per edizione (vedi sotto). Inoltre, le edizioni rilasciate possono variare in base alla versione.
+  * Supporta Beatrice v2.0.0-rc0.
 * v.2.0.78-beta
   * correzione bug: evitato errore di upload del modello RVC
   * Ora è possibile l'avvio simultaneo con la versione 1.x
@@ -37,6 +41,20 @@ VCClient è un software che utilizza l'IA per la conversione vocale in tempo rea
   * correzione bug:
     * Corretto un bug per cui pitch e formant di beatrice v2 non venivano applicati
     * Corretto un bug per cui non era possibile creare ONNX per i modelli che utilizzano l'embedder di Applio
+
+## Edizioni
+
+Dalla v2.2.1 in poi, le edizioni supportano modelli di IA differenti.
+
+| edizione | piattaforma    | Modelli supportati |     |
+| -------- | -------------- | ------------------ | --- |
+| std      | win            | Beatrice           |     |
+| std      | mac(m1)        | Beatrice           |     |
+| std      | linux(x86-64)  | Beatrice           |     |
+| std      | linux(aarch64) | Beatrice           |     |
+| cuda     | win            | Beatrice, RVC      |     |
+| onnx     | win            | Beatrice, RVC      |     |
+| onnx     | mac(m1)        | Beatrice, RVC      |     |
 
 ## Download e link correlati
 
@@ -146,3 +164,5 @@ Questo software non è firmato dallo sviluppatore. Anche se viene visualizzato u
 ## Clausola di esclusione della responsabilità
 
 Non ci assumiamo alcuna responsabilità per eventuali danni diretti, indiretti, consequenziali, risultanti o speciali derivanti dall'uso o dall'impossibilità di utilizzare questo software.
+
+```
