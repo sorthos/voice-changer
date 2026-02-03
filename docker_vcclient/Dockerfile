@@ -12,9 +12,9 @@ ADD dummy /
 
 RUN git clone https://github.com/w-okada/voice-changer.git -b v.1.5.3.13
 
-
-
 RUN chmod 0777 /voice-changer/server
+COPY ./patches/FairseqHubert.py /voice-changer/server/voice_changer/RVC/embedder/FairseqHubert.py
+
 WORKDIR /voice-changer/server
 RUN pip install numpy==1.23.5 \
         && pip install pyworld==0.3.3 --no-build-isolation \
