@@ -10,7 +10,7 @@ services:
       args:
           DOCKER_BUILDKIT: 1
       shm_size: "2gb"
-    restart: always
+    #restart: always
     shm_size: "2gb"
     volumes:
       - type: bind
@@ -56,4 +56,4 @@ services:
       dockerfile: ../recorder/Dockerfile
     ports:
       - 10015:8080
-    restart: always
+    #restart: always
